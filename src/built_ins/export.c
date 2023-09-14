@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:20 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/14 08:29:27 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/14 21:10:46 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,20 +159,13 @@ void change_value_if_not(t_env **env, char *str)
 	{
 		if (strcmp(ptr->var, ft_cut(str, '=')) == 0)
 		{
-			printf("%s--\n", ft_cut(str, '='));
 			if (ptr->val != NULL)
-			{
-				printf("fuck\n");
 				ptr->val = "\0";
-			}
-			else if ((ptr->val == NULL || ptr->val[0] == '\0'))
-			{
+			else if (!ft_after_equ(str, '=') && ptr->val == NULL)
+				ptr->val = "\0";
+			else if (ptr->val[0] == '\0')
 				ptr->val = ft_substr(str, search_lenght(str, '=') + 1, 
 					ft_strlen(str) - search_lenght(str, '='));
-				printf("hereeee\n");				
-			}
-			else
-				return ;
 		}	
 		ptr = ptr->next;
 	}
@@ -187,7 +180,7 @@ void change_value_if_exist(t_env **env, char *str)
 	{
 		if (strcmp(ptr->var, ft_cut(str, '=')) == 0)
 		{
-			if (ptr->val == NULL || ptr->val[0] == '\0')
+			if (ptr->val == NULL || !ptr->val[0] || ptr->val[0])
 				ptr->val = ft_substr(str, search_lenght(str, '=') + 1,
 					ft_strlen(str) - search_lenght(str, '='));
 			return ;
@@ -222,7 +215,7 @@ void change_value_for_plus(t_env **env, char *str)
 				ptr->val = "\0";
 			else if (ft_after_equ(str, '=') && ptr->val == NULL)
 				ptr->val = ft_substr(str, search_lenght(str, '=') + 1, ft_strlen(str) - search_lenght(str, '='));
-			else if (ft_after_equ(str, '=') && ptr->val[0] != '\0')
+			else if (ft_after_equ(str, '=') && (!ptr->val[0] || ptr->val[0]))
 				ptr->val = ft_strjoin(ptr->val, ft_substr(str, search_lenght(str, '=') + 1,
 					ft_strlen(str) - search_lenght(str, '=')));
 			return ;
@@ -294,15 +287,16 @@ int export(char **argv, t_env **env, int argc)
 		if (argv[i] != NULL)
 		{
 			if (needed_first(argv[i][0]) == 0 || check_string(ft_cut(argv[i], search_lenght(argv[i], '=') - 1)) == 0)
-				return (printf("minishell: export: '%s': not a valid identifier\n", argv[i]), 0);
-			else if (((check_dupl(ft_cut(argv[i], '='), *env)) || ft_search_for_plus(argv[i], '+')))
+				printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
+			else if ((check_dupl(ft_cut(argv[i], '='), *env) || ft_search_for_plus(argv[i], '+')))
 			{
-				if (!ft_stchr(argv[i], '='))
-					return (0);
-				else if (ft_search_for_plus(argv[i], '+'))
+				if (ft_search_for_plus(argv[i], '+'))
 					change_value_for_plus(env, argv[i]);
 				else if (!ft_after_equ(argv[i], '='))
+				{
 					change_value_if_not(env, ft_cut(argv[i], '='));
+					printf("hereeeee\n");
+				}
 				else if (ft_after_equ(argv[i], '=')) 
 					change_value_if_exist(env, argv[i]);
 			}
@@ -311,7 +305,7 @@ int export(char **argv, t_env **env, int argc)
 				if (if_error(argv[i]) == 1 && check_string(argv[i]) == 1)
 					ft_lstaddback(env, ft_lst_new(argv[i], NULL));
 				else
-					return (printf("minishell: export: '%s': not a valid identifier\n", argv[i]), 0);
+					printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
 			}
 			else if ((needed_first(argv[i][0]) && !ft_after_equ(argv[i], '=')))
 				ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0 , search_lenght(argv[i], '=')), "\0"));
@@ -324,6 +318,10 @@ int export(char **argv, t_env **env, int argc)
 	}
 	return (1);
 }
+
+// export $dagv hello abd= $#@%ff _hjgk -ghkh uki-- + ghr+
+// 
+// 
 
 void sort_list_for_export(t_env **env)
 {
