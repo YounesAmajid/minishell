@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:20 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/14 06:47:15 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/14 08:29:27 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,11 +248,6 @@ int if_error(char *str)
 		
 }
 
-// int export_cases(t_env **env, char **str)
-// {
-	
-// }
-
 int check_string(char *str)
 {
 	int i;
@@ -262,7 +257,7 @@ int check_string(char *str)
 	{
 		if (str[i] != '_' && !ft_isalnum(str[i]))
 		{
-			if (str[i] == '+' && str[i + 1] == '=')
+			if ((str[i] == '+' && str[i + 1] == '=' )|| str[i] == '=')
 				return (1);
 			return (0);
 		}
@@ -270,6 +265,25 @@ int check_string(char *str)
 	}
 	return (1);
 }
+
+int  export_cases(t_env **env, char *str)
+{
+	if (needed_first(str[0]) == 0 || check_string(ft_cut(str, search_lenght(str, '=') - 1)) == 0)
+		return (printf("minishell: export: '%s': not a valid identifier\n", str), 0);
+	if (((check_dupl(ft_cut(str, '='), *env)) || ft_search_for_plus(str, '+')))
+	{
+		if (!ft_stchr(str, '='))
+			return (0);
+		else if (ft_search_for_plus(str, '+'))
+			change_value_for_plus(env, str);
+		else if (!ft_after_equ(str, '='))
+			change_value_if_not(env, ft_cut(str, '='));
+		else if (ft_after_equ(str, '=')) 
+			change_value_if_exist(env, str);
+	}
+	return (1);
+}
+
 int export(char **argv, t_env **env, int argc)
 {
 	int i;
@@ -278,10 +292,9 @@ int export(char **argv, t_env **env, int argc)
 	while (i < argc)
 	{
 		if (argv[i] != NULL)
-		{	
-			// if (check_string(ft_cut(argv[i], '+')) && ft_after_equ(argv[i], ))
-			if (needed_first(argv[i][0]) == 0)
-				printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
+		{
+			if (needed_first(argv[i][0]) == 0 || check_string(ft_cut(argv[i], search_lenght(argv[i], '=') - 1)) == 0)
+				return (printf("minishell: export: '%s': not a valid identifier\n", argv[i]), 0);
 			else if (((check_dupl(ft_cut(argv[i], '='), *env)) || ft_search_for_plus(argv[i], '+')))
 			{
 				if (!ft_stchr(argv[i], '='))
@@ -298,18 +311,14 @@ int export(char **argv, t_env **env, int argc)
 				if (if_error(argv[i]) == 1 && check_string(argv[i]) == 1)
 					ft_lstaddback(env, ft_lst_new(argv[i], NULL));
 				else
-					printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
+					return (printf("minishell: export: '%s': not a valid identifier\n", argv[i]), 0);
 			}
 			else if ((needed_first(argv[i][0]) && !ft_after_equ(argv[i], '=')))
-			{
 				ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0 , search_lenght(argv[i], '=')), "\0"));
-			}
 			else if ((ft_stchr(argv[i], '=')) && (needed_first(argv[i][0]) && ft_after_equ(argv[i], '=')))
-			{
-				ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0, search_lenght(argv[i], '=')), 
-					ft_substr(argv[i], search_lenght(argv[i], '=') + 1,
-						ft_strlen(argv[i]) - search_lenght(argv[i], '='))));
-			}
+					ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0, search_lenght(argv[i], '=')), 
+						ft_substr(argv[i], search_lenght(argv[i], '=') + 1,
+							ft_strlen(argv[i]) - search_lenght(argv[i], '='))));
 		}
 		i++;
 	}
