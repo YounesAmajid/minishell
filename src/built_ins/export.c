@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:20 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/14 02:06:59 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/14 06:47:15 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int ft_after_equ(char *str, char c)
 		if (str[i] == c) if (str[i + 1] != '\0') return (1);
 	return (0);
 }
-int check_var(char *str, t_env *env)
+int check_dupl(char *str, t_env *env)
 {
 	while (env)
 	{
@@ -160,18 +160,19 @@ void change_value_if_not(t_env **env, char *str)
 		if (strcmp(ptr->var, ft_cut(str, '=')) == 0)
 		{
 			printf("%s--\n", ft_cut(str, '='));
-			if (!ft_after_equ(str, '=') && (ptr->val == NULL || ptr->val[0] == '\0'))
+			if (ptr->val != NULL)
 			{
 				printf("fuck\n");
 				ptr->val = "\0";
 			}
-			else if (ft_after_equ(str, '=') && (ptr->val == NULL || ptr->val[0] == '\0'))
+			else if ((ptr->val == NULL || ptr->val[0] == '\0'))
 			{
 				ptr->val = ft_substr(str, search_lenght(str, '=') + 1, 
-					ft_strlen(str) - search_lenght(str, '=') + 1);
+					ft_strlen(str) - search_lenght(str, '='));
 				printf("hereeee\n");				
 			}
-			return ;
+			else
+				return ;
 		}	
 		ptr = ptr->next;
 	}
@@ -186,8 +187,7 @@ void change_value_if_exist(t_env **env, char *str)
 	{
 		if (strcmp(ptr->var, ft_cut(str, '=')) == 0)
 		{
-			printf("%s\n", ft_cut(str, '='));
-			if (ptr->val == NULL || ptr->val[0] == '\0' || ptr->val[0] != '\0')
+			if (ptr->val == NULL || ptr->val[0] == '\0')
 				ptr->val = ft_substr(str, search_lenght(str, '=') + 1,
 					ft_strlen(str) - search_lenght(str, '='));
 			return ;
@@ -205,7 +205,10 @@ int ft_search_for_plus(char *str, char c)
 		if (str[i] == c && str[i + 1] == '=') return (1);
 	return (0);
 }
-
+// int chek_var(char *str)
+// {
+	
+// }
 void change_value_for_plus(t_env **env, char *str)
 {
 	t_env *ptr;
@@ -215,14 +218,13 @@ void change_value_for_plus(t_env **env, char *str)
 	{
 		if (ft_strcmp(ptr->var, ft_cut(str, '+')) == 0)
 		{
-			if (ptr->val == NULL && !ft_after_equ(str, '='))
+			if (!ft_after_equ(str, '=') && ptr->val == NULL)
 				ptr->val = "\0";
-			else if (ft_after_equ(str, '=') && (ptr->val[0] == '\0' || ptr->val == NULL))
+			else if (ft_after_equ(str, '=') && ptr->val == NULL)
 				ptr->val = ft_substr(str, search_lenght(str, '=') + 1, ft_strlen(str) - search_lenght(str, '='));
-			else if (ft_after_equ(str, '=') && (ptr->val[0] != '\0'))
+			else if (ft_after_equ(str, '=') && ptr->val[0] != '\0')
 				ptr->val = ft_strjoin(ptr->val, ft_substr(str, search_lenght(str, '=') + 1,
 					ft_strlen(str) - search_lenght(str, '=')));
-			printf("%lu-->\n", ft_strlen(str) - search_lenght(str, '='));
 			return ;
 		}	
 		ptr = ptr->next;
@@ -250,6 +252,24 @@ int if_error(char *str)
 // {
 	
 // }
+
+int check_string(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != '_' && !ft_isalnum(str[i]))
+		{
+			if (str[i] == '+' && str[i + 1] == '=')
+				return (1);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
 int export(char **argv, t_env **env, int argc)
 {
 	int i;
@@ -257,36 +277,40 @@ int export(char **argv, t_env **env, int argc)
 	i = 1;
 	while (i < argc)
 	{
-		if (((check_var(ft_cut(argv[i], '='), *env)) || ft_search_for_plus(argv[i], '+')))
-		{
-			if (ft_search_for_plus(argv[i], '+'))
-				change_value_for_plus(env, argv[i]);
-			else if (search_after_equ(argv[i]))
-				change_value_if_not(env, ft_cut(argv[i], '='));
-			else if (ft_after_equ(argv[i], '=')) 
-				change_value_if_exist(env, argv[i]);	
-			return (1);
+		if (argv[i] != NULL)
+		{	
+			// if (check_string(ft_cut(argv[i], '+')) && ft_after_equ(argv[i], ))
+			if (needed_first(argv[i][0]) == 0)
+				printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
+			else if (((check_dupl(ft_cut(argv[i], '='), *env)) || ft_search_for_plus(argv[i], '+')))
+			{
+				if (!ft_stchr(argv[i], '='))
+					return (0);
+				else if (ft_search_for_plus(argv[i], '+'))
+					change_value_for_plus(env, argv[i]);
+				else if (!ft_after_equ(argv[i], '='))
+					change_value_if_not(env, ft_cut(argv[i], '='));
+				else if (ft_after_equ(argv[i], '=')) 
+					change_value_if_exist(env, argv[i]);
+			}
+			else if ((needed_first(argv[i][0]) && !ft_stchr(argv[i], '=')))
+			{
+				if (if_error(argv[i]) == 1 && check_string(argv[i]) == 1)
+					ft_lstaddback(env, ft_lst_new(argv[i], NULL));
+				else
+					printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
+			}
+			else if ((needed_first(argv[i][0]) && !ft_after_equ(argv[i], '=')))
+			{
+				ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0 , search_lenght(argv[i], '=')), "\0"));
+			}
+			else if ((ft_stchr(argv[i], '=')) && (needed_first(argv[i][0]) && ft_after_equ(argv[i], '=')))
+			{
+				ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0, search_lenght(argv[i], '=')), 
+					ft_substr(argv[i], search_lenght(argv[i], '=') + 1,
+						ft_strlen(argv[i]) - search_lenght(argv[i], '='))));
+			}
 		}
-		else if ((needed_first(argv[i][0]) && !ft_stchr(argv[i], '=')))
-		{
-			if (if_error(argv[i]) == 1)
-				return (ft_lstaddback(env, ft_lst_new(argv[i], NULL)), 0);
-			return (printf("minishell: export: '%s': not a valid identifier\n", argv[i]), 0);
-		}
-		else if ((needed_first(argv[i][0]) && !ft_after_equ(argv[i], '=')))
-		{
-			ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0 , search_lenght(argv[i], '=')), "\0"));
-			return (1);
-		}
-		else if ((ft_stchr(argv[i], '=')) && (needed_first(argv[i][0]) && ft_after_equ(argv[i], '=')))
-		{
-			ft_lstaddback(env, ft_lst_new(ft_substr(argv[i], 0, search_lenght(argv[i], '=')), 
-				ft_substr(argv[i], search_lenght(argv[i], '=') + 1,
-					ft_strlen(argv[i]) - search_lenght(argv[i], '='))));
-			return (1);
-		}
-		else if (argv[i][0] != needed_first(argv[i][0]))
-			return (printf("minishell: export: '%s': not a valid identifier\n", argv[i]), 0);
 		i++;
 	}
 	return (1);
