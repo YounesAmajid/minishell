@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 11:04:19 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/11 16:30:03 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/17 23:26:10 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,24 @@ void exec_cmd(t_tree *tree,t_env *env,char **_env,char **arg);
 char *validpath(char *arg,t_env *env);
 int	ft_lstsize(t_token *list);
 // ------------------------------builtins------------------------------
-void pwd();
-void cd(int args_count, char **args, t_env **env);
-void	echo(int argc, char **argv);
-void env_var(char **argv, t_env *env);
-int unset(char *variable, t_env **env_list);
+void pwd(t_env **env);
+void set_env_var(t_env **env, char *key, char *value);
+void unset(t_env **env, char **argv, int argc);
 int export(char **argv, t_env **env, int argc);
-void _env(t_env *env);
-void exit_built(int args_count, char **input);
-t_env *find_env(t_env *env, char *name);
-t_env *dup_env(char **env);
-int check_identifier(char *identifier);
-void export_alone(t_env *env);
 int	built_ins(char **argv,t_env *env,int argc);
+void exit_built(int args_count, char **input);
+void update_pwd(t_env **env);
+char *get_env_var(t_env **env, char *key);
+int cd_command(char **argv, t_env **env);
+t_env *find_env(t_env *env, char *name);
+int check_identifier(char *identifier);
+void env_var(char **argv, t_env *env);
+void	echo(int argc, char **argv);
+int ft_after_equ(char *str, char c);
+void export_alone(t_env *env);
+int ft_stchr(char *s, char c);
+t_env *dup_env(char **env);
+void _env(t_env *env);
 // ------------------------------parsing------------------------------
 t_tree *parser(t_token *tokens,t_env *env);
 t_tree *parse_pipe(t_token **tokens,t_env *env);

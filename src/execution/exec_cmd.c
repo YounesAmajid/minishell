@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 13:18:31 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/11 15:08:08 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/18 00:30:32 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,24 @@ char *validpath(char *arg,t_env *env)
     i = -1;
     if(ft_strchr(arg, '/'))
     {
-        if (!access(arg,X_OK) && is_bulting(arg))
+        if (!access(arg,X_OK))
             return(arg);
-        return (fd_printf(2,"Minishell: %s: No such file or directory\n",arg),NULL);
+        return (fd_printf(2,"Minishell: %s: No such file or directory\n",arg),exit(127),NULL);
     }
     cmd = ft_strjoin("/",arg);
     while (env)
     {
-        if (!ft_strcmp(env->var,"PATH"))
+        if (ft_strcmp(env->var,"PATH") == 0)
             whole_path = ft_strdup(env->val);
         env = env->next;
     }
+    if (!whole_path && ft_strcmp(arg,"ls") != 0)
+        return (fd_printf(2,"Minishell: %s: No such file or directory\n",arg),exit(127),NULL);
+    else if (!whole_path && ft_strcmp(arg,"ls") == 0)
+        return (fd_printf(2,"Minishell: %s: Permission denied\n",arg),exit(126),NULL);
     path = ft_split(whole_path,':');
+    if (!path)
+        return (NULL);
     while (path[++i])
     {
         vpath = ft_strjoin(path[i],cmd);

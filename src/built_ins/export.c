@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:20 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/14 21:10:46 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/16 11:30:27 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void change_value_if_not(t_env **env, char *str)
 		{
 			if (ptr->val != NULL)
 				ptr->val = "\0";
-			else if (!ft_after_equ(str, '=') && ptr->val == NULL)
+			else if (ptr->val == NULL)
 				ptr->val = "\0";
 			else if (ptr->val[0] == '\0')
 				ptr->val = ft_substr(str, search_lenght(str, '=') + 1, 
@@ -198,10 +198,7 @@ int ft_search_for_plus(char *str, char c)
 		if (str[i] == c && str[i + 1] == '=') return (1);
 	return (0);
 }
-// int chek_var(char *str)
-// {
-	
-// }
+
 void change_value_for_plus(t_env **env, char *str)
 {
 	t_env *ptr;
@@ -259,22 +256,9 @@ int check_string(char *str)
 	return (1);
 }
 
-int  export_cases(t_env **env, char *str)
+void wrong(void)
 {
-	if (needed_first(str[0]) == 0 || check_string(ft_cut(str, search_lenght(str, '=') - 1)) == 0)
-		return (printf("minishell: export: '%s': not a valid identifier\n", str), 0);
-	if (((check_dupl(ft_cut(str, '='), *env)) || ft_search_for_plus(str, '+')))
-	{
-		if (!ft_stchr(str, '='))
-			return (0);
-		else if (ft_search_for_plus(str, '+'))
-			change_value_for_plus(env, str);
-		else if (!ft_after_equ(str, '='))
-			change_value_if_not(env, ft_cut(str, '='));
-		else if (ft_after_equ(str, '=')) 
-			change_value_if_exist(env, str);
-	}
-	return (1);
+	return ;
 }
 
 int export(char **argv, t_env **env, int argc)
@@ -282,6 +266,11 @@ int export(char **argv, t_env **env, int argc)
 	int i;
 
 	i = 1;
+	if (argv[1] && argv[1][0]=='-' && argv[1][1])
+	{
+		printf("minishell: export: %s : invalid option\n",argv[1]);
+		return 1;
+	}
 	while (i < argc)
 	{
 		if (argv[i] != NULL)
@@ -292,11 +281,9 @@ int export(char **argv, t_env **env, int argc)
 			{
 				if (ft_search_for_plus(argv[i], '+'))
 					change_value_for_plus(env, argv[i]);
+				else if (!ft_stchr(argv[i], '=') && check_dupl(ft_cut(argv[i], '='), *env)) wrong();
 				else if (!ft_after_equ(argv[i], '='))
-				{
 					change_value_if_not(env, ft_cut(argv[i], '='));
-					printf("hereeeee\n");
-				}
 				else if (ft_after_equ(argv[i], '=')) 
 					change_value_if_exist(env, argv[i]);
 			}
@@ -318,10 +305,6 @@ int export(char **argv, t_env **env, int argc)
 	}
 	return (1);
 }
-
-// export $dagv hello abd= $#@%ff _hjgk -ghkh uki-- + ghr+
-// 
-// 
 
 void sort_list_for_export(t_env **env)
 {
