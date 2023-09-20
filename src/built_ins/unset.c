@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:24 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/15 00:01:14 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/20 03:05:22 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ void unset(t_env **env, char **argv, int argc)
         {
             if (ft_strcmp(argv[i], ptr->var) == 0)
             {
-                if (prev == NULL) // the head of the list is being deleted
+                if (prev == NULL)
                     *env = ptr->next;
                 else
                     prev->next = ptr->next;
                 free(ptr->var);
                 free(ptr);
-                break; // node deleted, exit the while loop
+                break;
             }
             prev = ptr;
             ptr = ptr->next;

@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 11:04:19 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/20 01:13:07 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/20 04:01:56 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,15 @@ void ft_add_to_val(t_env **env, char *key);
 char *get_env_var(t_env **env, char *key);
 void cd_command(char **argv, t_env **env);
 t_env *find_env(t_env *env, char *name);
+void	ft_lstaddback(t_env **env, t_env *newnode);
 int check_identifier(char *identifier);
+t_env *ft_lst_new(char *str, char *val);
 void env_var(char **argv, t_env *env);
+int search_lenght(char *s, char c);
+char *ft_strcpy(char *s1, char *s2, int len);
+int needed_first(char c);
+int check_dupl(char *str, t_env *env);
+int ft_lst_size(t_env *env);
 void	echo(int argc, char **argv);
 int ft_after_equ(char *str, char c);
 void update_pwd(t_env **env, char **argv);

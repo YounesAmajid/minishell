@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:30 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/20 01:30:43 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/20 04:44:37 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char *get_home_path(t_env **env)
         {
             str = (char *)malloc(sizeof((*env)->val));
             if (!str)
-                return (NULL);
+                return (NULL); 
             str = (*env)->val;
         }
         (*env) = (*env)->next;
@@ -33,16 +33,15 @@ char *get_home_path(t_env **env)
 
 void set_env_var(t_env **env, char *key, char *value)
 {
-    // Check environment list for existing key
-    if (env == NULL) return ;
-    while (*env) {
-        if (strcmp((*env)->var, key) == 0) {
-            // Here, free the old value and replace with new one
-            (*env)->val = NULL;
-            (*env)->val = strdup(value);
+    t_env *current = *env;
+    while (current) {
+        if (strcmp(current->var, key) == 0)
+        {
+            current->val = NULL;
+            current->val = strdup(value);
             return;
         }
-        env = &(*env)->next;
+        current = current->next;
     }
 }
 
@@ -58,41 +57,32 @@ char *get_env_var(t_env **env, char *key)
     }
     return NULL;
 }
-void ft_add_to_val(t_env **env, char *key)
+int ft_check_for_cd(char **argv, t_env **env)
 {
-    if (env == NULL) return ;
-    while (*env) {
-        if (strcmp((*env)->var, key) == 0) {
-            (*env)->val = ft_strjoin((*env)->val, "/..");
-            return;
-        }
-        env = &(*env)->next;
-    }
-}
-
-void update_pwd(t_env **env, char **argv)
-{
-    char *old_pwd;
-    char *new_pwd;
-    char *n_pwd;
-
-    old_pwd = get_env_var(env, "PWD");
-    if (old_pwd)
-        set_env_var(env, "OLDPWD", old_pwd);
-    new_pwd = getcwd(NULL, 0);
-    if (new_pwd)
-        set_env_var(env, "PWD", new_pwd);
-    else
+    if (argv[0] && argv[1])
     {
-        n_pwd = get_env_var(env, "PWD");
-        if (ft_strcmp(argv[1], ".") == 0)
-            set_env_var(env, "PWD", ft_strjoin(n_pwd, "/."));
-        else if (ft_strcmp(argv[1], "..") == 0)
-            set_env_var(env, "PWD", ft_strjoin(n_pwd, "/.."));
-        ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", STDOUT_FILENO);
+        if (access(argv[1], F_OK))
+        {
+            ft_putstr_fd("minishell cd: ", STDERR_FILENO);
+            ft_putstr_fd(argv[1], STDERR_FILENO);
+            ft_putstr_fd(" : no such file or directory \n", STDERR_FILENO);
+            return (1);
+        }
+        else if ((access(argv[1], X_OK) == 0 && access(argv[1], W_OK) == 0 && access(argv[1], R_OK) == 0))
+        {
+            if (chdir(argv[1]) == 0)
+                return (update_pwd(env, argv), 1);
+        }
+        else if ((access(argv[1], X_OK) != 0 || access(argv[1], W_OK) != 0 || access(argv[1], R_OK) != 0))
+        {
+            ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+            ft_putstr_fd(argv[1], STDERR_FILENO);
+            ft_putstr_fd(" : Permission denied \n", STDERR_FILENO);
+            return (1);
+        }
     }
+    return (0);
 }
-
 
 void cd_command(char **argv, t_env **env)
 {
@@ -100,127 +90,31 @@ void cd_command(char **argv, t_env **env)
 
     if (argv[1] != NULL)
     {
-        if (argv[0] && argv[1])
+        if (ft_check_for_cd(argv, env) == 1) return ;
+        if (chdir(argv[1]) == 0)
         {
-            if (access(argv[1], F_OK))
-            {
-                ft_putstr_fd("minishell cd: ", STDOUT_FILENO);
-                ft_putstr_fd(argv[1], STDOUT_FILENO);
-                ft_putstr_fd(" : no such file or directory: \n", STDOUT_FILENO);
-            }
-            else if ((access(argv[1], X_OK) == 0 && access(argv[1], W_OK) == 0 && access(argv[1], R_OK) == 0))
-            {
-                if (chdir(argv[1]) == 0)
-                {
-                    update_pwd(env, argv);
-                    return ;
-                }
-            }
-            else if ((access(argv[1], X_OK) != 0 || access(argv[1], W_OK) != 0 || access(argv[1], R_OK) != 0))
-            {
-                ft_putstr_fd("minishell: cd:", STDOUT_FILENO);
-                ft_putstr_fd(argv[1], STDOUT_FILENO);
-                ft_putstr_fd(" : Permission denied \n", STDOUT_FILENO);
-                return ;
-            }
-        }
-    }
-    else
-    {
-        str = get_home_path(env);
-        if (!str)
-        {
-            ft_putstr_fd("minishell: cd: HOME not set\n", STDOUT_FILENO);
+            set_env_var(env, "PWD", argv[1]);
             return;
-        }
-        if (!chdir(str)) 
-        {
-            // Update OLDPWD and PWD
-            update_pwd(env,argv);
         }
         else
         {
-            printf("minishell: can't change to home directory\n");
+            printf("minishell: can't change to directory %s\n", argv[1]);
+            return;
         }
     }
-    return;
+    else if (argv[0] && argv[1] == NULL)
+    {
+        if (chdir(str) == 0)
+        {
+            str = get_env_var(env, "HOME");
+            set_env_var(env, "PWD", str);
+            return ;
+        }
+        else
+            printf("minishell: can't change to home directory\n");
+    }
+    return ;
 }
-
-
-// int cd_command(char **argv, t_env **env)
-// {
-//     char *str;
-
-//     if (argv[1] != NULL)
-//     {
-//         if (argv[0] && argv[1])
-//         {
-//             printf("1\n");
-//             if ((access(argv[1], X_OK) == 0 && access(argv[1], W_OK) == 0 && access(argv[1], R_OK) == 0))
-//             {
-//                 printf("2\n");
-//                 if (chdir(argv[1]) == 0)
-//                 {
-//                     update_pwd(env);
-//                     return 0;
-//                 }
-//                 else
-//                 {
-//                     ft_putstr_fd("minishell cd: ", STDOUT_FILENO);
-//                     ft_putstr_fd(argv[1], STDOUT_FILENO);
-//                     ft_putstr_fd(" : no such file or directory: \n", STDOUT_FILENO);
-//                     return 0;
-//                 }
-//             }
-//             else if (((access(argv[1], X_OK) != 0 || access(argv[1], W_OK) != 0 || access(argv[1], R_OK) != 0)))
-//             {
-//                 ft_putstr_fd("minishell: cd:", STDOUT_FILENO);
-//                 ft_putstr_fd(argv[1], STDOUT_FILENO);
-//                 ft_putstr_fd(" : Permission denied \n", STDOUT_FILENO);
-//                 return 0;
-//             }
-            
-//         }
-//     }
-//     else
-//     {
-//         str = get_home_path(env);
-//         if (!str)
-//         {
-//             ft_putstr_fd("minishell: cd: HOME not set\n", STDOUT_FILENO);
-//             return 0;
-//         }
-//         if (!chdir(str)) 
-//         {
-//             // Update OLDPWD and PWD
-//             update_pwd(env);
-//             return 0;
-//         }
-//         else {
-//             // If getcwd() returns NULL, the directory doesn't exist. 
-//             char *cwd = getcwd(NULL, 0);
-//             if (!cwd) {
-//                 return 1;
-//             }
-//             // Always free a string returned by getcwd() with argument NULL
-//             free(cwd);
-//         }
-//     }
-//     return 0;
-// }
-
-// void handle_cd_command(char **argv, t_env **env)
-// {
-//     int cd_fail_count = 0;
-//     int result = cd_command(argv, env);
-//     if (result == 1) {
-//         if (cd_fail_count == 0) {
-//             printf("cd: ..: No such file or directory\n");
-//         } else {
-//             printf("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
-//         }
-//         cd_fail_count++;
-//     } else {
-//         cd_fail_count = 0;
-//     }
-// }
+// cd tmp/cd ..
+// cd 
+// 
