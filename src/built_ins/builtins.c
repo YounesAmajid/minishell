@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 03:39:16 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/18 01:38:55 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/19 23:23:00 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 int	built_ins(char **argv,t_env *env,int argc)
 {
 	if (ft_strcmp(argv[0], "env") == 0)
-		return (_env(env),1);
-	// if (ft_strcmp(argv[0], "unset") == 0 && argc > 1)
-	// 	unset(argv[1], &env);
+		return (my_env(&env),1);
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 	{
 		return (pwd(&env),1);
@@ -25,8 +23,8 @@ int	built_ins(char **argv,t_env *env,int argc)
 	}
 	else if (ft_strcmp(argv[0], "exit") == 0)
 		exit_built(argc, argv);
-	// else if (ft_strcmp(argv[0], "echo") == 0)
-	// 	return (echo(argc, argv),1);
+	else if (ft_strcmp(argv[0], "echo") == 0)
+		return (echo(argc, argv),1);
 	else if (ft_strcmp(argv[0], "unset") == 0)
 	{
 		unset(&env , argv, argc);
