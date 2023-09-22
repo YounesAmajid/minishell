@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 11:04:19 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/22 02:07:06 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/22 07:48:45 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,19 +66,20 @@ void exec_cmd(t_tree *tree,t_env *env,char **_env,char **arg);
 char *validpath(char *arg,t_env *env);
 int	ft_lstsize(t_token *list);
 // ------------------------------builtins------------------------------
-int	built_ins(char **argv,t_env **env,int argc);
-char *get_env_var(t_env **env, char *key);
 void set_env_var(t_env **env, char *key, char *value);
+int	built_ins(char **argv,t_env **env,int argc);
+int export(char **argv, t_env **env, int argc);
+void unset(t_env **env, char **argv, int argc);
+void exit_built(int argc, char **argv);
 void ft_add_to_val(t_env **env, char *key);
+char *get_env_var(t_env **env, char *key);
 void update_pwd(t_env **env, char **argv);
 void cd_command(char **argv, t_env **env);
+char *get_home_path(t_env **env);
 void echo(int argc, char **argv);
-void my_env(t_env **env);
-void exit_built(int args_count, char **input);
-int export(char **argv, t_env **env, int argc);
-void pwd(t_env **env);
-void unset(t_env **env, char **argv, int argc);
 void export_alone(t_env *env);
+void my_env(t_env **env);
+void pwd(t_env **env);
 // ------------------------------parsing------------------------------e
 t_tree *parser(t_token *tokens,t_env *env);
 t_tree *parse_pipe(t_token **tokens,t_env *env);

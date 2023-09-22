@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:32:41 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/22 03:39:37 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/22 08:10:25 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,51 @@ int ft_check_arg(char *str)
   return (1);
 }
 
+void ft_echo_case_1(char **argv, int i, int argc)
+{
+	while (i < argc && (ft_check_arg(argv[i]) == 1 && (ft_need(argv[i][0]) == 0)))
+			i++;
+    while (i < argc)
+    {
+			if (i + 1 == argc)
+				ft_putstr_fd(argv[i], STDOUT_FILENO);
+			else
+			{
+				ft_putstr_fd(argv[i], STDOUT_FILENO);
+				ft_putchar_fd(' ', STDOUT_FILENO);
+			}
+			i++;
+    }
+}
+
+void ft_echo_case_2(char **argv, int i, int argc)
+{
+	while (i < argc && (ft_check_arg(argv[i]) == 1 && (ft_need(argv[i][0]) == 0)))
+			i++;
+	while (i < argc)
+    {
+			if (i + 1 == argc)
+				ft_putstr_fd(argv[i], STDOUT_FILENO);
+			else
+			{
+				ft_putstr_fd(argv[i], STDOUT_FILENO);
+				ft_putchar_fd(' ', STDOUT_FILENO);
+			}
+			i++;
+    }
+}
+int  echo_no_arg(char **argv, int i)
+{
+	if (argv[0] && !argv[1])
+	{
+    	printf("\n");
+		return (0);
+	}
+	else if (argv[0] && ft_check_arg(argv[i]) == 1 && !argv[2])
+		return (0);
+	else
+		return (1);
+}
 void echo(int argc, char **argv)
 {
     int i;
@@ -40,82 +85,21 @@ void echo(int argc, char **argv)
 
     i = 1;
 	flag = 0;
-    if (argv[0] && !argv[1])
-	{
-    	printf("\n");
+    if (echo_no_arg(argv, i) == 0)
 		return ;
-	}
-	else if (argv[0] && ft_check_arg(argv[i]) == 1 && !argv[2])
-	{
-		printf("1\n");
-		return ;
-	}
 	if ((ft_need(*argv[1]) == 0 && ft_check_arg(argv[1]) == 1))
 	{
 		i = 2;
 		flag = 1;
-		while (i < argc && ft_check_arg(argv[i]) == 1)
-				i++;
-    	while (i < argc)
-    	{
-				if (i + 1 == argc)
-					ft_putstr_fd(argv[i], STDOUT_FILENO);
-				else
-				{
-					ft_putstr_fd(argv[i], STDOUT_FILENO);
-					ft_putchar_fd(' ', STDOUT_FILENO);
-				}
-				i++;
-    	}
+		ft_echo_case_1(argv, i, argc);
 	}
 	else
 	{
 		flag = 0;
-		while (i < argc && ft_check_arg(argv[i]) == 1)
-				i++;
-		while (i < argc)
-    	{
-				if (i + 1 == argc)
-					ft_putstr_fd(argv[i], STDOUT_FILENO);
-				else
-				{
-					ft_putstr_fd(argv[i], STDOUT_FILENO);
-					ft_putchar_fd(' ', STDOUT_FILENO);
-				}
-				i++;
-    	}
+		ft_echo_case_2(argv, i, argc);
 	}	
 	if (flag == 0)
 		printf("\n");
 	_status(0);
 	return ;
 }
-
-
-// void echo(int argc, char **argv)
-// {
-//     bool n_option;
-//     int i;
-    
-//     i = 1;
-//     n_option = false;
-      
-//     if (argc > 1 && argv[1] && strcmp(argv[1], "-n") == 0)
-//     {
-//         n_option = true;
-//         i++;
-//     }
-//     while (i < argc)
-//     {
-//       if (i < argc - 1) {
-//         printf("%s ", argv[i]);
-//       }
-//       else {
-//         printf("%s", argv[i]);
-//       }
-//       i++;
-//     }
-//     if (!n_option) {
-//       printf("\n");
-//     }
-// }

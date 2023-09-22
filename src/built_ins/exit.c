@@ -3,78 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:15 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/21 05:24:03 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/22 08:05:57 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int check_exit(char *input)
-{
-    size_t i;
 
-    i = 0;
-    if (input == NULL)
-        return 0;
-    while (input[i])
-    {
-        if (!ft_isdigit(input[i]))
-            return 1;
-        i++;
-    }
-    return 0;
+int	ft_atoi(const char *str)
+{
+	long long	res;
+	int sign;
+
+	res = 0;
+	sign = 1;
+	while (*str == 32 || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '-')
+		sign *= -1;
+	if (*str == '-' || *str == '+')
+		str++;
+	while (*str >= '0' && *str <= '9')
+	{
+		res = res * 10 + *str - '0';
+		str++;
+	}
+	return (res * sign);
 }
 
-void exit_built(int args_count, char **input)
+void exit_built(int argc, char **argv)
 {
-    int non_number = 0;
-    int i = 1;
-    if (args_count == 1)
+    if (argc > 2)
     {
-        exit(g_global_exit);
+        printf("exit\n");
+        printf("bash: exit: %s: numeric argument required\n", argv[1]);
     }
-    while (i < args_count)
-    {
-        if (check_exit(input[i]))
-            non_number = 1;
-        i++;
-    }
-    if (args_count == 2 && input[1] != NULL && non_number)
-    {
-        // exit l 1 1 1
-        ft_putstr_fd("exit: ", STDERR_FILENO);
-        ft_putstr_fd(input[1], STDERR_FILENO);
-        ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-        exit(255);
-        g_global_exit = 255;
-    }
-    else if (args_count > 2 && !non_number)
-    {
-        // exit 1 1 1 1
-        ft_putstr_fd("exit: too many arguments\n", STDERR_FILENO);
-        g_global_exit = 1;
-    }
-    else if (args_count > 2 && !check_exit(input[1]) && non_number)
-    {
-        // exit 1 l l l
-        ft_putstr_fd("exit: too many arguments\n", STDERR_FILENO);
-        g_global_exit = 1;
-    }
-    else if (args_count > 2 && non_number)
-    {
-        // exit l l l
-        // exit l 1 1 1 1 1
-        ft_putstr_fd("exit: ", STDERR_FILENO);
-        ft_putstr_fd(input[1], STDERR_FILENO);
-        ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-        exit(255);
-        g_global_exit = 255;
-    }
-    else
-    {
-        exit(g_global_exit);
-    }
+    
+    // if (argv[0] && !argv[1])
+    //     exit(g_global_exit);
+    // else if (argv[0] && argv[1])
+    
 }
