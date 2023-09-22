@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 13:19:32 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/11 15:04:14 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/21 08:34:45 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,17 @@ int redir_creation(t_redir *redir,t_env *env)
     {
         fd = open(redir->open_file,redir->file_flages, 0664);
         if (fd == -1)
-            return (perror("fd error"),0);
+            return (fd_printf(2,"Minishell: %s: No such file or directory\n",redir->open_file),exit(1),0);
         if(redir->type == ROUT || redir->type == APPEND)
-            dup2(fd,STDOUT_FILENO);
+        {
+            if (dup2(fd,STDOUT_FILENO) == -1)
+                return (perror("dup2 error"),exit(1),0);
+        }
         else
-            dup2(fd,STDIN_FILENO);
+        {
+            if (dup2(fd,STDIN_FILENO) == -1)
+                return (perror("dup2 error"),exit(1),0);
+        }
         return (close(fd),1);
     }
     else
@@ -64,7 +70,7 @@ char **list_to_array(t_token *simplecmd,int *len)
 
     i = 0;
     *len = ft_lstsize(simplecmd);
-    arg = malloc(sizeof(char *) * (*len + 1));
+    arg = ft_malloc(sizeof(char *) * (*len + 1), 1);
     while(simplecmd)
     {
         arg[i++] = ft_strdup(simplecmd->value);
@@ -74,8 +80,9 @@ char **list_to_array(t_token *simplecmd,int *len)
     return (arg);
 }
 
-void exec_redir(t_tree *tree,t_env *env,char **_env)
+void exec_redir(t_tree *tree,t_env **env,char **_env)
 {
+    // (void)_env;
     pid_t pid;
     int status;
     int list_len;
@@ -84,17 +91,20 @@ void exec_redir(t_tree *tree,t_env *env,char **_env)
     arg = list_to_array(((t_simplecmd *)tree)->simplecmd,&list_len);
     if (is_bulting(arg[0]))
     {
-        redir_creation(((t_simplecmd *)tree)->redir_list,env);
-        if (built_ins(arg,env,list_len) || !arg[0])
+        redir_creation(((t_simplecmd *)tree)->redir_list, *env);
+        if (built_ins(arg, env,list_len) || !arg[0])
             return ;
     }
     pid = fork();
+    if (pid == -1)
+        perror("fork error");
     if (!pid)
     {
         while(((t_simplecmd *)tree)->redir_list && check_redir(((t_simplecmd *)tree)->redir_list->type) && 
-                redir_creation(((t_simplecmd *)tree)->redir_list,env))
+                redir_creation(((t_simplecmd *)tree)->redir_list, *env))
             ((t_simplecmd *)tree)->redir_list = ((t_simplecmd *)tree)->redir_list->next;
-        exec_cmd(tree,env,_env,arg);
+        if (arg[0])
+            exec_cmd(tree, *env,_env,arg);
         exit(0);
     }
     waitpid(pid,&status,0);

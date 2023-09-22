@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/31 01:44:30 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/09 14:31:01 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/21 03:50:44 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ char *check_expand(char *str,t_env *env, int *i)
     char *var;
     (void)env;
     index = *i + 1;
+    if (str[index] == 0)
+        return ("$");
     if(str[index] && str[index] == '?')
     {
         *i = index;
@@ -59,7 +61,7 @@ char **ft_expand(char *str,t_env *env,int mode)
     cmd = NULL;
     ptr = NULL;
     int i = -1;
-    s = malloc(sizeof(char *) * 2);
+    s = ft_malloc(sizeof(char *) * 2, 1);
     while(str[++i])
     {
         if (str[i] == '$')
@@ -68,7 +70,8 @@ char **ft_expand(char *str,t_env *env,int mode)
             ptr = check_none_expand(str, &i);
         cmd = ft_strjoin(cmd,ptr);
     }
+    free(str);
     if (mode == 1)
         return (ft_split(cmd,' '));
-    return (s[0] = malloc(sizeof(char) * ft_strlen(cmd) + 1),s[0] = ft_strdup(cmd),s[1] = NULL,s);
+    return (s[0] = ft_malloc(sizeof(char) * ft_strlen(cmd) + 1, 1),s[0] = ft_strdup(cmd),s[1] = NULL,s);
 }

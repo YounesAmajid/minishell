@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 11:04:19 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/20 04:01:56 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/22 02:07:06 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
-#include <errno.h>
+# include <errno.h>
+# include <sys/types.h>
+# include <dirent.h>
 
 int g_global_exit;
 
@@ -32,10 +34,6 @@ typedef struct s_env
     char *var;
     char *val;
     struct s_env *next;
-    char *prev;
-    int exit_status;
-    int print_err;
-    int chdir_result;
 }t_env;
 
 // ------------------------------env------------------------------
@@ -61,41 +59,27 @@ void execution(t_tree *tree,t_env **env,char **_env);
 void exec_pipe(t_tree *tree,t_env *env,char **_env);
 int piping_pross(t_tree *tree,t_env *env,int fd[2],int std,char **_env);
 void close_p(int fd[2]);
-void exec_redir(t_tree *tree,t_env *env,char **_env);
+void exec_redir(t_tree *tree,t_env **env,char **_env);
 int redir_creation(t_redir *redir,t_env *env);
 int is_bulting(char *cmd);
 void exec_cmd(t_tree *tree,t_env *env,char **_env,char **arg);
 char *validpath(char *arg,t_env *env);
 int	ft_lstsize(t_token *list);
 // ------------------------------builtins------------------------------
-
-void set_env_var(t_env **env, char *key, char *value);
-void unset(t_env **env, char **argv, int argc);
-int export(char **argv, t_env **env, int argc);
-int	built_ins(char **argv,t_env *env,int argc);
-void exit_built(int args_count, char **input);
-void ft_add_to_val(t_env **env, char *key);
+int	built_ins(char **argv,t_env **env,int argc);
 char *get_env_var(t_env **env, char *key);
-void cd_command(char **argv, t_env **env);
-t_env *find_env(t_env *env, char *name);
-void	ft_lstaddback(t_env **env, t_env *newnode);
-int check_identifier(char *identifier);
-t_env *ft_lst_new(char *str, char *val);
-void env_var(char **argv, t_env *env);
-int search_lenght(char *s, char c);
-char *ft_strcpy(char *s1, char *s2, int len);
-int needed_first(char c);
-int check_dupl(char *str, t_env *env);
-int ft_lst_size(t_env *env);
-void	echo(int argc, char **argv);
-int ft_after_equ(char *str, char c);
+void set_env_var(t_env **env, char *key, char *value);
+void ft_add_to_val(t_env **env, char *key);
 void update_pwd(t_env **env, char **argv);
-void export_alone(t_env *env);
-int ft_stchr(char *s, char c);
-t_env *dup_env(char **env);
-void pwd(t_env **env);
+void cd_command(char **argv, t_env **env);
+void echo(int argc, char **argv);
 void my_env(t_env **env);
-// ------------------------------parsing------------------------------
+void exit_built(int args_count, char **input);
+int export(char **argv, t_env **env, int argc);
+void pwd(t_env **env);
+void unset(t_env **env, char **argv, int argc);
+void export_alone(t_env *env);
+// ------------------------------parsing------------------------------e
 t_tree *parser(t_token *tokens,t_env *env);
 t_tree *parse_pipe(t_token **tokens,t_env *env);
 t_tree *parse_cmd(t_token **tokens,t_env *env);
@@ -107,4 +91,10 @@ t_tree *pipenode(t_tree *left, t_tree *right);
 void add_back_redir(t_redir **lst,t_redir *new);
 t_redir *ft_lastlst_redir(t_redir *node);
 bool check_redir(t_token_type flage);
+
+
+
+
+
+void ft_wildcard(t_init *in,char *param,int *index);
 #endif

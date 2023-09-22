@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:24 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/20 03:05:22 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/21 08:29:02 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void unset(t_env **env, char **argv, int argc)
     t_env *prev;
 
     i = 1;
+    
     while (i < argc)
     {
         prev = NULL;
@@ -27,19 +28,26 @@ void unset(t_env **env, char **argv, int argc)
         {
             if (ft_strcmp(argv[i], ptr->var) == 0)
             {
-                if (prev == NULL)
+                if (prev == NULL) // the head of the list is being deleted
                     *env = ptr->next;
                 else
                     prev->next = ptr->next;
                 free(ptr->var);
                 free(ptr);
-                break;
+                break; // node deleted, exit the while loop
             }
             prev = ptr;
             ptr = ptr->next;
         }
         i++;
     }
+
+    // ptr = *env;
+    //       while (ptr)
+    //     {
+    //         printf("*%s*\n", ptr->var);
+    //         ptr = ptr->next;
+    //     }
 }
 
 

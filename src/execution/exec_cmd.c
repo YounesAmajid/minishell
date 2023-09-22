@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 13:18:31 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/18 00:30:32 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/21 05:14:59 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,8 @@ char *validpath(char *arg,t_env *env)
             whole_path = ft_strdup(env->val);
         env = env->next;
     }
-    if (!whole_path && ft_strcmp(arg,"ls") != 0)
+    if (!whole_path)
         return (fd_printf(2,"Minishell: %s: No such file or directory\n",arg),exit(127),NULL);
-    else if (!whole_path && ft_strcmp(arg,"ls") == 0)
-        return (fd_printf(2,"Minishell: %s: Permission denied\n",arg),exit(126),NULL);
     path = ft_split(whole_path,':');
     if (!path)
         return (NULL);

@@ -3,50 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 13:12:45 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/18 00:38:05 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/21 04:07:53 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void vsSEE(t_tree *tree)
+void	listclear_env(t_env **head)
 {
-    if(!tree)
-        return ;
-    if(tree->type == PIPE)
-    {
-        t_pipeline *pipe = (t_pipeline *)tree;
-        vsSEE(pipe->left);
-        // printf("l_%d\n",pipe->left->type);
-        printf("|");
-        vsSEE(pipe->right);
-        
-    }
-    else if (tree->type == REDIRECTION)
-    {
-         while (((t_redircmd *)tree)->redir_list)
-        {
-            printf("%s\n", ((t_redircmd *)tree)->redir_list->open_file);
-            ((t_redircmd *)tree)->redir_list = ((t_redircmd *)tree)->redir_list->next;
-        }
-    }
-    else if (tree->type == WORD)
-    {
-        
-        while (((t_simplecmd *)tree)->simplecmd && tree->type != PIPE)
-        {
-            printf("%s\n", ((t_simplecmd *)tree)->simplecmd->value);
-            ((t_simplecmd *)tree)->simplecmd = ((t_simplecmd *)tree)->simplecmd->next;
-        } 
-    }
-    
-}
+	t_env	*tmp;
+	t_env	*ptr;
 
+	if (!head)
+		return ;
+	tmp = *head;
+	while (tmp)
+	{
+		ptr = tmp;
+		tmp = tmp->next;
+		free(ptr->var);
+		free(ptr->val);
+		free(ptr);
+	}
+	*head = NULL;
+}
+void ff()
+{
+    system("leaks minishell");
+}
 int main(int ac, char **av, char **env)
 {
+    // atexit(ff);
     (void)ac;
     (void)av;
     char *line;
@@ -63,28 +53,29 @@ int main(int ac, char **av, char **env)
     envrm = dup_env(env);
     token = NULL;
     tree = NULL;
+
     while(1)
     {
         dup2(in,STDIN_FILENO);
         dup2(out,STDOUT_FILENO);
         signal(SIGINT,sig_handler);
-        
         line = readline("minishell-$ ");
         if (!line)
             break;
         token = ft_lexer(line,envrm);
+
         // while (token)
         // {
         //     printf("%s\n",token->value);
         //     token = token->next;
         // }
         tree = parser(token,envrm);
-    
         if (tree)
             execution(tree,&envrm,env);
-        // vsSEE(tree);
         if(*line)
             add_history(line);
+        free (line);
     }
+    listclear_env(&envrm);
     return 0;
 }
