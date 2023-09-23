@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 11:04:19 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/22 07:48:45 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/22 08:20:14 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ void set_env_var(t_env **env, char *key, char *value);
 int	built_ins(char **argv,t_env **env,int argc);
 int export(char **argv, t_env **env, int argc);
 void unset(t_env **env, char **argv, int argc);
-void exit_built(int argc, char **argv);
 void ft_add_to_val(t_env **env, char *key);
 char *get_env_var(t_env **env, char *key);
 void update_pwd(t_env **env, char **argv);
 void cd_command(char **argv, t_env **env);
 char *get_home_path(t_env **env);
 void echo(int argc, char **argv);
+void exit_built(int argc, char **argv);
 void export_alone(t_env *env);
 void my_env(t_env **env);
 void pwd(t_env **env);

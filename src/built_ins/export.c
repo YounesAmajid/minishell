@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 13:33:20 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/21 08:41:00 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/23 03:25:16 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int ft_lst_size(t_env *env)
+int	ft_lst_size(t_env *env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!env)
@@ -26,9 +26,10 @@ int ft_lst_size(t_env *env)
 	}
 	return (i);
 }
-int needed_first(char c)
+
+int	needed_first(char c)
 {
-	if (((c == '_' ) || ft_isalpha(c))) return (1);
+	if (((c == '_' ) || ft_isalpha(c)))	return (1);
 	return (0);
 }
 
@@ -248,87 +249,89 @@ void wrong(void)
 {
 	return ;
 }
+int validate_arg(char *arg)
+{
+    return needed_first(arg[0]) && check_string(ft_cut(arg, search_lenght(arg, '=') - 1));
+}
+
+int is_duplicate(char *arg, t_env *env) 
+{
+    return check_dupl(ft_cut(arg, '='), env) || ft_search_for_plus(arg, '+');
+}
+
+void handle_plus(t_env **env, char *arg)
+{
+    if (ft_search_for_plus(arg, '+'))
+        change_value_for_plus(env, arg);
+    else if (!ft_stchr(arg, '=') && check_dupl(ft_cut(arg, '='), *env)) 
+        wrong();
+    else if (!ft_after_equ(arg, '='))
+        change_value_if_not(env, ft_cut(arg, '='));
+    else if (ft_after_equ(arg, '='))
+        change_value_if_exist(env, arg);
+}
 
 int export(char **argv, t_env **env, int argc)
 {
-	int i;
-
-	i = 1;
-	if (argv[1] && argv[1][0]=='-' && argv[1][1])
-	{
-		printf("minishell: export: %s : invalid option\n",argv[1]);
-		_status(2);
-		return 1;
-	}
-	while (i < argc)
-	{
-		if (argv[i] != NULL)
-		{
-			if (needed_first(argv[i][0]) == 0 || check_string(ft_cut(argv[i], search_lenght(argv[i], '=') - 1)) == 0)
-			{
-				printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
-				_status(1);
-			}
-			else if ((check_dupl(ft_cut(argv[i], '='), *env) || ft_search_for_plus(argv[i], '+')))
-			{
-				if (ft_search_for_plus(argv[i], '+'))
-					change_value_for_plus(env, argv[i]);
-				else if (!ft_stchr(argv[i], '=') && check_dupl(ft_cut(argv[i], '='), *env)) wrong();
-				else if (!ft_after_equ(argv[i], '='))
-					change_value_if_not(env, ft_cut(argv[i], '='));
-				else if (ft_after_equ(argv[i], '=')) 
-					change_value_if_exist(env, argv[i]);
-			}
-			else if ((needed_first(argv[i][0]) && !ft_stchr(argv[i], '=')))
-			{
-				if (if_error(argv[i]) == 1 && check_string(argv[i]) == 1)
-					ft_lstaddback(env, ft_lst_new(ft_strdup_env(argv[i]), NULL));
-				else
-				{
-					printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
-					_status(2);
-				}
-			}
-			else if ((needed_first(argv[i][0]) && !ft_after_equ(argv[i], '=')))
-				ft_lstaddback(env, ft_lst_new(ft_substr_env(argv[i], 0 , search_lenght(argv[i], '=')), "\0"));
-			else if ((ft_stchr(argv[i], '=')) && (needed_first(argv[i][0]) && ft_after_equ(argv[i], '=')))
-					ft_lstaddback(env, ft_lst_new(ft_substr_env(argv[i], 0, search_lenght(argv[i], '=')), 
-						ft_substr_env(argv[i], search_lenght(argv[i], '=') + 1,
-							ft_strlen(argv[i]) - search_lenght(argv[i], '='))));
-		}
-		i++;
-	}
-	return (1);
+    int i = 1;
+    if (argv[1] && argv[1][0]=='-' && argv[1][1]) {
+        printf("minishell: export: %s : invalid option\n",argv[1]);
+        _status(2);
+        return 1;
+    }
+    while (i < argc) {
+        if (argv[i] != NULL) {
+            if (!validate_arg(argv[i])) {
+                printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
+                _status(1);
+            } else if (is_duplicate(argv[i], *env)) {
+                handle_plus(env, argv[i]);
+            } else if (needed_first(argv[i][0]) && !ft_stchr(argv[i], '=')) {
+                if (if_error(argv[i]) == 1 && check_string(argv[i]) == 1)
+                    ft_lstaddback(env, ft_lst_new(ft_strdup_env(argv[i]), NULL));
+                else {
+                    printf("minishell: export: '%s': not a valid identifier\n", argv[i]);
+                    _status(2);
+                }
+            } else if (needed_first(argv[i][0]) && !ft_after_equ(argv[i], '=')) {
+                ft_lstaddback(env, ft_lst_new(ft_substr_env(argv[i], 0 , search_lenght(argv[i], '=')), "\0"));
+            } else if (ft_stchr(argv[i], '=') && needed_first(argv[i][0]) && ft_after_equ(argv[i], '=')) {
+                ft_lstaddback(env, ft_lst_new(ft_substr_env(argv[i], 0, search_lenght(argv[i], '=')), 
+                    ft_substr_env(argv[i], search_lenght(argv[i], '=') + 1,
+                        ft_strlen(argv[i]) - search_lenght(argv[i], '='))));
+            }
+        }
+        i++;
+    }
+    return 1;
 }
 
-void sort_list_for_export(t_env **env)
+void sort_list_for_export(t_env *env)
 {
 	t_env *ptr;
 	char *var;
 	char *val;
 	int j;
 
-	ptr = *env;
-	int i = ft_lst_size(*env);
-	while (i > 0)
+	ptr = env;
+	int i = ft_lst_size(env);
+	while (--i > 0)
 	{
 		j = i - 1;
 		while (j--)
 		{
-			if ((*env)->next && ft_strncmp((*env)->var, (*env)->next->var, 1) > 0)
+			if (env->next && ft_strncmp(env->var, env->next->var, 1) > 0)
 			{
-				var = (*env)->var;
-				val = (*env)->val;
-				(*env)->var = (*env)->next->var;
-				(*env)->val = (*env)->next->val;
-				(*env)->next->var = var;
-				(*env)->next->val = val;
+				var = env->var;
+				val = env->val;
+				env->var = env->next->var;
+				env->val = env->next->val;
+				env->next->var = var;
+				env->next->val = val;
 			}
-			(*env) = (*env)->next;
+			env = env->next;
 		}
-		i--;
-		*env = ptr;
-		
+		env = ptr;
 	}
 }
 
@@ -336,7 +339,7 @@ void export_alone(t_env *env)
 {
 	t_env *tmp;
 	tmp = env;
-	sort_list_for_export(&tmp);
+	sort_list_for_export(tmp);
 	while(tmp)
 	{
 		if(!tmp->val)
