@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/08 13:32:41 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/22 08:10:25 by yamajid          ###   ########.fr       */
+/*   Created: 2023/09/28 10:46:25 by yamajid           #+#    #+#             */
+/*   Updated: 2023/09/28 10:46:27 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,11 @@ void echo(int argc, char **argv)
     i = 1;
 	flag = 0;
     if (echo_no_arg(argv, i) == 0)
+	{
+		printf("%s\n", argv[1]);
+		_status(0);
 		return ;
+	}
 	if ((ft_need(*argv[1]) == 0 && ft_check_arg(argv[1]) == 1))
 	{
 		i = 2;

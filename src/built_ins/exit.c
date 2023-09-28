@@ -5,13 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/08 13:33:15 by yelwadou          #+#    #+#             */
-/*   Updated: 2023/09/23 03:52:32 by yamajid          ###   ########.fr       */
+/*   Created: 2023/09/28 10:46:36 by yamajid           #+#    #+#             */
+/*   Updated: 2023/09/28 10:47:24 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
 
 long long	ft_atoi_long(const char *str)
 {
@@ -79,8 +78,7 @@ void exit_built(int argc, char **argv)
     }
     else
     {
-        _status((unsigned char)ft_atoi_long(argv[1]));
-        printf("here%d\n", g_global_exit);
+        _status(ft_atoi_long(argv[1]));
         exit(g_global_exit);
     }
 }

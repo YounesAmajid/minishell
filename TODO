@@ -1,9 +1,16 @@
+1- segf: "ll"$r
+2 - bad behavior : "$ll"
+3 - unset a freeing variable not allocated
+4 - update exit status to 0;
+5 -
+
+/*
 echo $var ===> SEGFAULT ==> var not exist in env
 
-cd Desktop/minishell/
-/usr/bin/cd: line 4: cd: Desktop/minishell/: No such file or directory
+//cd Desktop/minishell/
+///usr/bin/cd: line 4: cd: Desktop/minishell/: No such file or directory
 
-ls | < fileafdsf : display error msg √
+//ls | < fileafdsf : display error msg √
 
 
 > file : file not created √
@@ -121,3 +128,6 @@ minishell-$ ls
 Makefile        TODO            b               gc              includes        libft-42        minishell       src             test.c
 =================================================================
 ==13691==ERROR: AddressSanitizer: attempting double-free on 0x602000003830 in thread T0:
+*/
+
+ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls
