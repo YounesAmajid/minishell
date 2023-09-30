@@ -6,7 +6,7 @@
 /*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 11:04:19 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/28 10:59:42 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/28 19:38:38 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 /Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/\
 Versions/Current/Commands:/Users/asabri/.brew/bin"
 
-int			g_global_exit;
+int		g_global_exit;
 typedef struct s_env
 {
 	char			*var;
@@ -55,12 +55,13 @@ char			**takevar(char *str);
 void			add_var_back(t_env **lst, t_env *new);
 t_env			*ft_lstlast(t_env *node);
 char			**env_to_arr(t_env *env);
-
+char			*get_home_path(t_env **env);
 t_token			*ft_lexer(char *line, t_env *env);
 t_token			*ft_lastlst(t_token *node);
 void			add_back(t_token **lst, t_token *new);
 t_token			*newtoken(t_token_type flag, t_token_type _qoute, 
 					char *token, int _herdoc);
+void			no_arg(void);
 char			**get_word(char *str, int *index, t_env *env, int herdoc);
 char			**get_q(char *str, t_init *in, int *index, int herdoc);
 char			**ft_expand(char *str, t_env *env, int mode);
@@ -71,6 +72,7 @@ void			_status(int s);
 void			sig_handler(int signum);
 void			exit_status(int status);
 void			execution(t_tree *tree, t_env **env);
+void			printf_error(char **argv);
 void			exec_pipe(t_tree *tree, t_env *env);
 int				piping_pross(t_tree *tree, t_env *env, int fd[2], int std);
 void			close_p(int fd[2]);
@@ -82,18 +84,16 @@ char			*validpath(char *arg, t_env *env);
 int				ft_lstsize(t_token *list);
 char			**list_to_array(t_token *simplecmd, int *len);
 char			**list_to_array_env(t_token *simplecmd, int *len);
-
 int				built_ins(char **argv, t_env **env, int argc);
 char			*get_env_var(t_env **env, char *key);
-
 int				ft_lst_size(t_env *env);
-
 void			set_env_var(t_env **env, char *key, char *value);
 void			ft_add_to_val(t_env **env, char *key);
 void			update_pwd(t_env **env, char **argv);
 void			cd_command(char **argv, t_env **env);
 void			echo(int argc, char **argv);
 int				needed_first(char c);
+int				ft_need(char c);
 t_env			*ft_lst_last(t_env *env);
 int				if_error(char *str);
 t_env			*ft_lst_new(char *str, char *val);
@@ -120,7 +120,7 @@ int				ft_search_for_plus(char *str, char c);
 int				for_plus(t_env **env, char *str);
 int				check_string(char *str);
 void			wrong(void);
-void			other_cases(char **argv,  int i, t_env **env);
+void			other_cases(char **argv, int i, t_env **env);
 int				validate_arg(char *arg);
 void			change_value_for_plus(t_env **env, char *str);
 

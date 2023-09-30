@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   exec_simplecmd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 08:46:16 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/28 08:58:56 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 19:37:09 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	close_redir(t_redir *redir)
+{
+	while (redir)
+	{
+		if (redir->type == HEREDOC)
+			close(redir->in_fd);
+		redir = redir->next;
+	}
+}
 
 int	run_cmd_sc(t_tree *tree, t_env **env, char **arg)
 {
@@ -49,6 +59,7 @@ void	exec_redir_sc(t_tree *tree, t_env **env)
 	}
 	if (!pid)
 		run_cmd_sc(tree, env, args);
+	close_redir(((t_simplecmd *)tree)->redir_list);
 	waitpid(pid, &status, 0);
 	exit_status(status);
 }

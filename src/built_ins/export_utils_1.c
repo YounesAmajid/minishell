@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 07:14:17 by yamajid           #+#    #+#             */
-/*   Updated: 2023/09/28 10:52:24 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/28 12:13:17 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,12 @@ int	ft_lst_size(t_env *env)
 
 int	needed_first(char c)
 {
-	if (((c == '_' ) || ft_isalpha(c)))	return (1);
+	if (((c == '_' ) || ft_isalpha(c)))
+		return (1);
 	return (0);
 }
 
-t_env *ft_lst_last(t_env *env)
+t_env	*ft_lst_last(t_env *env)
 {
 	if (env->next == NULL)
 		return (env);
@@ -42,12 +43,11 @@ t_env *ft_lst_last(t_env *env)
 	return (env);
 }
 
-
-t_env *ft_lst_new(char *str, char *val)
+t_env	*ft_lst_new(char *str, char *val)
 {
-	t_env *head;
+	t_env	*head;
 
-	head = (t_env *)malloc(sizeof(t_env));
+	head = (t_env *)ft_malloc(sizeof(t_env), 2);
 	if (!head)
 		return (NULL);
 	head->var = str;

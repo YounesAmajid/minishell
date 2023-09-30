@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 02:40:22 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/28 01:52:51 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 15:50:27 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_redir
 	t_token_type	type;
 	int				file_flages;
 	int				in_fd;
-	char			*open_file; 
+	char			*open_file;
 	struct s_redir	*next;
 }t_redir;
 

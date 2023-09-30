@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redir.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 13:19:32 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/28 09:57:24 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 17:55:36 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	redir_creation(t_redir *redir, t_env *env)
 	{
 		if (dup2(redir->in_fd, STDIN_FILENO) == -1)
 			return (perror(" dup2 Error"), exit(1), 0);
+		return (close(redir->in_fd), 1);
 	}
 	return (1);
 }

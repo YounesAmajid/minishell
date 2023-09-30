@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 01:31:07 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/27 00:48:57 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 19:39:55 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 	char	*str;
 
-	i = 0;
-	j = 0;
+	i = -1;
+	j = -1;
 	if (!s1 && !s2)
 		return (NULL);
 	if (!s1)
@@ -29,16 +29,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	str = ft_malloc(((ft_strlen(s1) + ft_strlen(s2)) + 1) * sizeof(char), 1);
 	if (!str)
 		return (NULL);
-	while (s1[i])
-	{
+	while (s1[++i])
 		str[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-	{
+	while (s2[++j])
 		str[i + j] = s2[j];
-		j++;
-	}
 	str[i + j] = '\0';
 	return (str);
 }
@@ -49,8 +43,8 @@ char	*ft_strjoin_env(char const *s1, char const *s2)
 	int		j;
 	char	*str;
 
-	i = 0;
-	j = 0;
+	i = -1;
+	j = -1;
 	if (!s1 && !s2)
 		return (NULL);
 	if (!s1)
@@ -60,16 +54,10 @@ char	*ft_strjoin_env(char const *s1, char const *s2)
 	str = ft_malloc(((ft_strlen(s1) + ft_strlen(s2)) + 1) * sizeof(char), 2);
 	if (!str)
 		return (NULL);
-	while (s1[i])
-	{
+	while (s1[++i])
 		str[i] = s1[i];
-		i++;
-	}
-	while (s2[j])
-	{
+	while (s2[++j])
 		str[i + j] = s2[j];
-		j++;
-	}
 	str[i + j] = '\0';
 	return (str);
 }

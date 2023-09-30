@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils_malloc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 21:54:09 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/12 02:38:34 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 12:34:21 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../includes/ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
 t_malloc	*newmalloc(void *data)
 {

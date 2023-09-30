@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 13:12:45 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/28 09:35:50 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 13:52:34 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	setup_environment(t_env **envrm, int *in, int *out, char **env)
 
 void	run_minishell(t_env *envrm, int in, int out)
 {
-	
 	char	*line;
 	t_token	*token;
 	t_tree	*tree;

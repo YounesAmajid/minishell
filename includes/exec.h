@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 04:22:15 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/28 01:53:16 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 12:34:29 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,5 @@
 # include <stdlib.h>
 # include <string.h>
 # include <signal.h> 
-
 
 #endif

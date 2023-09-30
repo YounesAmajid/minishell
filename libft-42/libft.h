@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 00:55:49 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/22 10:13:46 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 12:33:15 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include "../includes/ft_malloc.h"
+
 void	fd_printf(int fd, const char *fmt, ...);
 int		ft_atoi(const char *str);
 void	ft_bzero(void *s, size_t n);
@@ -33,7 +34,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *s);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
-int	    ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
 char	*ft_strrchr(const char *s, int c);
@@ -53,8 +54,9 @@ void	ft_putnbr_fd(int n, int fd);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	**ft_split(char const *s, char c);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
-char	*ft_strndup(const char *s1,int len);
+char	*ft_strndup(const char *s1, int len);
 char	*ft_strdup_expand(char *s1);
 char	*ft_strdup_env(const char *s1);
 char	*ft_strjoin_env(char const *s1, char const *s2);
+
 #endif

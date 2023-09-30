@@ -3,49 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
+/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 10:51:36 by yamajid           #+#    #+#             */
-/*   Updated: 2023/09/28 10:52:39 by yamajid          ###   ########.fr       */
+/*   Updated: 2023/09/28 11:44:59 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int ft_stchr(char *s, char c)
+int	ft_stchr(char *s, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (s[i++]) if (s[i] == c) return (1);
+	while (s[i++]) 
+		if (s[i] == c) 
+			return (1);
 	return (0);
 }
 
-int search_lenght(char *s, char c)
+int	search_lenght(char *s, char c)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (s[i]) 
 	{
-		if (s[i] == c) return (i);
+		if (s[i] == c) 
+			return (i);
 		i++;
 	}
 	return (i);
 }
 
-int ft_after_equ(char *str, char c)
+int	ft_after_equ(char *str, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i++])
-		if (str[i] == c) if (str[i + 1] != '\0') return (1);
+		if (str[i] == c) 
+			if (str[i + 1] != '\0') 
+				return (1);
 	return (0);
 }
-int check_dupl(char *str, t_env *env)
+
+int	check_dupl(char *str, t_env *env)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
 	tmp = env;
 	while (tmp)
@@ -57,11 +63,13 @@ int check_dupl(char *str, t_env *env)
 	return (0);
 }
 
-int search_after_equ(char *str)
+int	search_after_equ(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (str[i++]) if (str[i] == '=' && str[i + 1] == '\0') return (1);
+	while (str[i++])
+		if (str[i] == '=' && str[i + 1] == '\0')
+			return (1);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yamajid <yamajid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 02:28:50 by asabri            #+#    #+#             */
-/*   Updated: 2023/09/28 09:25:52 by asabri           ###   ########.fr       */
+/*   Updated: 2023/09/28 12:27:11 by yamajid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,6 @@ void	fd_printf(int fd, const char *fmt, ...)
 
 	i = -1;
 	va_start(s, fmt);
-	if (!fmt)
-	{
-		// printf("");
-		return ;
-	}
 	while (fmt[++i])
 	{
 		if (fmt[i] != '%')
