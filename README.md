@@ -1,8 +1,8 @@
 Key Requirements:
-				Program Name: minishell
-				Turn-in Files: Makefile, *.h, *.c
+		Program Name: minishell
+		Turn-in Files: Makefile, *.h, *.c
 Makefile:
-				Include rules: NAME, all, clean, fclean, re
+		Include rules: NAME, all, clean, fclean, re
 Mandatory Part:
 		Program Behavior:
 						My minishell should:
